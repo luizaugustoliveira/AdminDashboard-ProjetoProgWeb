@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  billboardId String
+  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Cascade)
+  products    Product[]
+
+  @@index([billboardId], map: "Category_billboardId_fkey")
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId], map: "Image_productId_fkey")
+}
+
+model Billboard {
+  id         String     @id @default(uuid())
+  name       String
+  categories Category[]
+}
+
+model Product {
+  id         String      @id @default(uuid())
+  name       String
+  sizeId     String
+  colorId    String
+  categoryId String?
+  bookings   Booking[]
+  images     Image[]
+  orders     OrderItem[]
+  Category   Category?   @relation(fields: [categoryId], references: [id])
+  color      Color       @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  size       Size        @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId], map: "Product_categoryId_fkey")
+  @@index([colorId], map: "Product_colorId_fkey")
+  @@index([sizeId], map: "Product_sizeId_fkey")
+}
+
+model Size {
+  id       String    @id @default(uuid())
+  name     String
+  storeId  String
+  products Product[]
+  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId], map: "Size_storeId_fkey")
+}
+
+model Color {
+  id       String    @id @default(uuid())
+  name     String
+  storeId  String
+  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products Product[]
+
+  @@index([storeId], map: "Color_storeId_fkey")
+}
+
+model Store {
+  id     String  @id @default(uuid())
+  name   String
+  colors Color[]
+  orders Order[]
+  sizes  Size[]
+}
+
+model Order {
+  id      String      @id @default(uuid())
+  storeId String
+  store   Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  items   OrderItem[]
+
+  @@index([storeId], map: "Order_storeId_fkey")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  productId String
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId], map: "OrderItem_orderId_fkey")
+  @@index([productId], map: "OrderItem_productId_fkey")
+}
+
+model Booking {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId], map: "Booking_productId_fkey")
+}
