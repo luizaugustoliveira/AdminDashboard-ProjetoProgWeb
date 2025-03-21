@@ -1,8 +1,8 @@
 import { authMiddleware } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
 
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
 export default authMiddleware({
-  publicRoutes: ["/", "/sign-in", "/sign-up"],
+  publicRoutes: ["/api/:path*"],
 });
 
 export const config = {
