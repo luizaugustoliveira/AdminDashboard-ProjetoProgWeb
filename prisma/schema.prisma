@@ -70,14 +70,24 @@ model Color {
   @@index([storeId], map: "Color_storeId_fkey")
 }
 
+model User {
+  id     String   @id @default(uuid())
+  email  String   @unique
+  stores Store[]
+}
+
 model Store {
   id     String  @id @default(uuid())
   name   String
+  userId String
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   colors Color[]
   orders Order[]
   sizes  Size[]
-  userId String
+
+  @@index([userId], map: "Store_userId_fkey")
 }
+
 
 model Order {
   id      String      @id @default(uuid())
