@@ -8,111 +8,155 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Category {
-  id          String    @id @default(uuid())
-  name        String
-  billboardId String
-  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Cascade)
-  products    Product[]
-
-  @@index([billboardId], map: "Category_billboardId_fkey")
-}
-
-model Image {
-  id        String  @id @default(uuid())
-  url       String
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([productId], map: "Image_productId_fkey")
-}
-
-model Billboard {
-  id         String     @id @default(uuid())
-  name       String
-  categories Category[]
-}
-
-model Product {
-  id         String      @id @default(uuid())
-  name       String
-  sizeId     String
-  colorId    String
-  categoryId String?
-  bookings   Booking[]
-  images     Image[]
-  orders     OrderItem[]
-  Category   Category?   @relation(fields: [categoryId], references: [id])
-  color      Color       @relation(fields: [colorId], references: [id], onDelete: Cascade)
-  size       Size        @relation(fields: [sizeId], references: [id], onDelete: Cascade)
-
-  @@index([categoryId], map: "Product_categoryId_fkey")
-  @@index([colorId], map: "Product_colorId_fkey")
-  @@index([sizeId], map: "Product_sizeId_fkey")
-}
-
-model Size {
-  id       String    @id @default(uuid())
-  name     String
-  storeId  String
-  products Product[]
-  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-
-  @@index([storeId], map: "Size_storeId_fkey")
-}
-
-model Color {
-  id       String    @id @default(uuid())
-  name     String
-  storeId  String
-  store    Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  products Product[]
-
-  @@index([storeId], map: "Color_storeId_fkey")
-}
-
-model User {
-  id     String   @id @default(uuid())
-  email  String   @unique
-  stores Store[]
-}
-
 model Store {
-  id     String  @id @default(uuid())
-  name   String
-  userId String?  // Agora userId é opcional
-  user   User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  colors Color[]
-  orders Order[]
-  sizes  Size[]
+  id        String     @id @default(uuid())
+  name      String
+  userId    String?    // Agora userId é opcional
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  billboards Billboard[]
+  categories Category[]
+  products  Product[]
+  sizes     Size[]
+  colors    Color[]
+  orders    Order[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([userId], map: "Store_userId_fkey")
 }
 
+model Billboard {
+  id         String     @id @default(uuid())
+  storeId    String
+  store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  label      String
+  imageUrl   String
+  categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([storeId], map: "Billboard_storeId_fkey")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  storeId     String
+  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  billboardId String
+  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Cascade)
+  name        String
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId], map: "Category_storeId_fkey")
+  @@index([billboardId], map: "Category_billboardId_fkey")
+}
+
+model Product {
+  id         String      @id @default(uuid())
+  storeId    String
+  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  price      Float
+  isFeatured Boolean     @default(false)
+  isArchived Boolean     @default(false)
+  sizeId     String
+  size       Size        @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  colorId    String
+  color      Color       @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  images     Image[]
+  orderItems OrderItem[]
+  bookings   Booking[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([storeId], map: "Product_storeId_fkey")
+  @@index([categoryId], map: "Product_categoryId_fkey")
+  @@index([sizeId], map: "Product_sizeId_fkey")
+  @@index([colorId], map: "Product_colorId_fkey")
+}
+
 model Order {
-  id      String      @id @default(uuid())
-  storeId String
-  store   Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  items   OrderItem[]
+  id        String    @id @default(uuid())
+  storeId   String
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  isPaid    Boolean   @default(false)
+  phone     String    @default("")
+  address   String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([storeId], map: "Order_storeId_fkey")
 }
 
 model OrderItem {
   id        String  @id @default(uuid())
-  productId String
   orderId   String
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([orderId], map: "OrderItem_orderId_fkey")
   @@index([productId], map: "OrderItem_productId_fkey")
 }
 
-model Booking {
+model Size {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  value     String
+  products  Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId], map: "Size_storeId_fkey")
+}
+
+model Color {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name      String
+  value     String
+  products  Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId], map: "Color_storeId_fkey")
+}
+
+model Image {
   id        String  @id @default(uuid())
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], map: "Image_productId_fkey")
+}
+
+model Booking {
+  id          String   @id @default(uuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  startTime   DateTime
+  endTime     DateTime
+  customer    String
+  contactInfo String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([productId], map: "Booking_productId_fkey")
+}
+
+model User {
+  id     String   @id @default(uuid())
+  email  String   @unique
+  stores Store[]
 }
