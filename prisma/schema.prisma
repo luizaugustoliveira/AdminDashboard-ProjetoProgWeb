@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Category {
@@ -79,15 +80,14 @@ model User {
 model Store {
   id     String  @id @default(uuid())
   name   String
-  userId String
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?  // Agora userId é opcional
+  user   User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   colors Color[]
   orders Order[]
   sizes  Size[]
 
   @@index([userId], map: "Store_userId_fkey")
 }
-
 
 model Order {
   id      String      @id @default(uuid())
