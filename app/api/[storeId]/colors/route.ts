@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs";
 
-import prismadb from '@/lib/prismadb';
- 
+import prismadb from "@/lib/prismadb";
+
+// POST - apenas admin
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
@@ -11,7 +12,6 @@ export async function POST(
     const { userId } = auth();
 
     const body = await req.json();
-
     const { name, value } = body;
 
     if (!userId) {
@@ -33,8 +33,8 @@ export async function POST(
     const storeByUserId = await prismadb.store.findFirst({
       where: {
         id: params.storeId,
-        userId
-      }
+        userId,
+      },
     });
 
     if (!storeByUserId) {
@@ -45,17 +45,18 @@ export async function POST(
       data: {
         name,
         value,
-        storeId: params.storeId
-      }
+        storeId: params.storeId,
+      },
     });
-  
+
     return NextResponse.json(color);
   } catch (error) {
-    console.log('[COLORS_POST]', error);
+    console.log("[COLORS_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
 
+// GET - público
 export async function GET(
   req: Request,
   { params }: { params: { storeId: string } }
@@ -67,13 +68,13 @@ export async function GET(
 
     const colors = await prismadb.color.findMany({
       where: {
-        storeId: params.storeId
-      }
+        storeId: params.storeId,
+      },
     });
-  
+
     return NextResponse.json(colors);
   } catch (error) {
-    console.log('[COLORS_GET]', error);
+    console.log("[COLORS_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}

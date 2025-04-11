@@ -3,31 +3,38 @@ import { auth } from "@clerk/nextjs";
 
 import prismadb from "@/lib/prismadb";
 
+// GET: Busca o billboard por ID, dentro de uma store
 export async function GET(
   req: Request,
-  { params }: { params: { billboardId: string } }
+  { params }: { params: { storeId: string; billboardId: string } }
 ) {
   try {
     if (!params.billboardId) {
       return new NextResponse("Billboard id is required", { status: 400 });
     }
 
-    const billboard = await prismadb.billboard.findUnique({
+    if (!params.storeId) {
+      return new NextResponse("Store id is required", { status: 400 });
+    }
+
+    const billboard = await prismadb.billboard.findFirst({
       where: {
-        id: params.billboardId
-      }
+        id: params.billboardId,
+        storeId: params.storeId,
+      },
     });
-  
+
     return NextResponse.json(billboard);
   } catch (error) {
-    console.log('[BILLBOARD_GET]', error);
+    console.log("[BILLBOARD_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
 
+// DELETE: Remove o billboard com autenticação e validação de store
 export async function DELETE(
   req: Request,
-  { params }: { params: { billboardId: string, storeId: string } }
+  { params }: { params: { storeId: string; billboardId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -44,7 +51,7 @@ export async function DELETE(
       where: {
         id: params.storeId,
         userId,
-      }
+      },
     });
 
     if (!storeByUserId) {
@@ -54,28 +61,27 @@ export async function DELETE(
     const billboard = await prismadb.billboard.delete({
       where: {
         id: params.billboardId,
-      }
+      },
     });
-  
+
     return NextResponse.json(billboard);
   } catch (error) {
-    console.log('[BILLBOARD_DELETE]', error);
+    console.log("[BILLBOARD_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
 
-
+// PATCH: Atualiza um billboard
 export async function PATCH(
   req: Request,
-  { params }: { params: { billboardId: string, storeId: string } }
+  { params }: { params: { storeId: string; billboardId: string } }
 ) {
-  try {   
+  try {
     const { userId } = auth();
-
     const body = await req.json();
-    
+
     const { label, imageUrl } = body;
-    
+
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
@@ -96,7 +102,7 @@ export async function PATCH(
       where: {
         id: params.storeId,
         userId,
-      }
+      },
     });
 
     if (!storeByUserId) {
@@ -109,13 +115,13 @@ export async function PATCH(
       },
       data: {
         label,
-        imageUrl
-      }
+        imageUrl,
+      },
     });
-  
+
     return NextResponse.json(billboard);
   } catch (error) {
-    console.log('[BILLBOARD_PATCH]', error);
+    console.log("[BILLBOARD_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
