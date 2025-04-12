@@ -40,7 +40,7 @@ These instructions will get you a copy of the project up and running on your loc
    npm install
    ```
 
-3. Create a .env file and update the content as follows my MySQL credentials, my Clerk Keys and my Cloudinary Cloud names.
+3. Create a .env file and update the content as follows my MySQL credentials, my Clerk Keys and my Cloudinary Cloud name.
 
    ```bash
    DATABASE_URL="mysql://root:sKQPjmDPKbeNuLwRpMHTBeLcOKZtGimd@crossover.proxy.rlwy.net:27811/railway"
