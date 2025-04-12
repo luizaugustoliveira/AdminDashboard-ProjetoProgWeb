@@ -1,4 +1,4 @@
-# Full Stack E-Commerce + Dashboard & CMS: Next.js 13 App Router
+# Admin Dashboard
 
 This project was inspired in a functional E-Commerce platform with an Admin Dashboard.
 
