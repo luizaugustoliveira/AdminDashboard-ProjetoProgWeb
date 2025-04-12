@@ -1,7 +1,6 @@
-
 # Full Stack E-Commerce + Dashboard & CMS: Next.js 13 App Router
 
-This project is inspired by [Code With Antonio's YouTube tutorial](https://www.youtube.com/channel/UCcDGs4xksF0Y3FvF8gbqZSg) on building a Full Stack E-Commerce platform using Next.js 13 App Router, React, Tailwind, Prisma, and MySQL. The tutorial emphasizes the utilization of Next.js 13 App Router for creating a seamless navigation and user experience in a fully functional E-Commerce platform with an Admin Dashboard.
+This project was inspired in a functional E-Commerce platform with an Admin Dashboard.
 
 ## Technologies Used
 
@@ -11,7 +10,6 @@ This project is inspired by [Code With Antonio's YouTube tutorial](https://www.y
 - [Prisma](https://www.prisma.io/)
 - [MySQL](https://www.mysql.com/)
 - [NextAuth](https://next-auth.js.org/)
-- [Stripe](https://stripe.com/)
 
 ## Features
 
@@ -20,8 +18,6 @@ This project is inspired by [Code With Antonio's YouTube tutorial](https://www.y
 - Responsive design implemented using Tailwind CSS.
 - User authentication handled by NextAuth.
 - Data management with Prisma and MySQL.
-- Payment processing with Stripe.
-- Deployment on Vercel.
 
 ## Getting Started
 
@@ -39,21 +35,52 @@ These instructions will get you a copy of the project up and running on your loc
    git clone https://github.com/your-username/project-name.git
    ```
 2. Install NPM packages
+
    ```
    npm install
    ```
 
-3. Configure your MySQL database and update the prisma/.env file with your MySQL credentials. Go to https://mongodb.com to set up your own MongoDB.
-   ```bash 
-   DATABASE_URL="mysql://user:password@localhost:3306/mydb"
+3. Create a .env file and update the content as follows my MySQL credentials, my Clerk Keys and my Cloudinary Cloud names.
+
+   ```bash
+   DATABASE_URL="mysql://root:sKQPjmDPKbeNuLwRpMHTBeLcOKZtGimd@crossover.proxy.rlwy.net:27811/railway"
+
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_Y2xlYW4tY29icmEtNzAuY2xlcmsuYWNjb3VudHMuZGV2JA
+   CLERK_SECRET_KEY=sk_test_BP2tCM4HUpP2hSdGPiOwi1CB1eXlb7n7biCv0cOs27
+
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+   NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+   NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
+   NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
+
+   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dtg2ivboz
    ```
 
-4. Apply the database schema
+4. Install the Next Cloudinary
+
+   ```bash
+   npm install next-cloudinary
+   ```
+
+5. Install the ShadCN library
+
+   ```bash
+   npx shadcn@latest
+   ```
+
+6. Add tanstack/react-table dependency
+
+   ```bash
+   npm install @tanstack/react-table
+   ```
+
+7. Apply the database schema
+
    ```bash
    npx prisma migrate dev
    ```
 
-5. Run the development server:
+8. Run the development server:
    ```bash
    npm run dev
    # or
@@ -70,24 +97,8 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
 ## Acknowledgements
 
-- [Code With Antonio](https://www.youtube.com/channel/UCcDGs4xksF0Y3FvF8gbqZSg)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Prisma Documentation](https://www.prisma.io/docs/)
