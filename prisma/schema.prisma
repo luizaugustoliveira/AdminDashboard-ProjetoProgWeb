@@ -160,7 +160,3 @@ model User {
   email  String   @unique
   stores Store[]
 }
-
-generator seed {
-  provider = "prisma-seed-js"
-}
