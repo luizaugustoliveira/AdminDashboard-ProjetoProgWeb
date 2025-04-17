@@ -49,8 +49,6 @@ These instructions will get you a copy of the project up and running on your loc
 3. Create a .env file and update the content as follows my MySQL credentials, my Clerk Keys and my Cloudinary Cloud name.
 
    ```bash
-   DATABASE_URL="mysql://root:sKQPjmDPKbeNuLwRpMHTBeLcOKZtGimd@crossover.proxy.rlwy.net:27811/railway"
-
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_Y2xlYW4tY29icmEtNzAuY2xlcmsuYWNjb3VudHMuZGV2JA
    CLERK_SECRET_KEY=sk_test_BP2tCM4HUpP2hSdGPiOwi1CB1eXlb7n7biCv0cOs27
 
